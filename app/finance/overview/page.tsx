@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Bell, Calendar, Download, Share2, TrendingDown, TrendingUp } from 'lucide-react'
-import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState } from 'react';
+import { Bell, Calendar, Download, Share2, TrendingDown, TrendingUp } from 'lucide-react';
+import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Mock data
 const budgetData = [
@@ -15,8 +15,8 @@ const budgetData = [
   { category: 'Food', budget: 500, spent: 480, icon: '🍔' },
   { category: 'Transportation', budget: 300, spent: 250, icon: '🚗' },
   { category: 'Utilities', budget: 200, spent: 180, icon: '💡' },
-  { category: 'Entertainment', budget: 200, spent: 220, icon: '🎬' },
-]
+  { category: 'Entertainment', budget: 200, spent: 220, icon: '🎬' }
+];
 
 const spendingData = [
   { name: 'Mon', amount: 120 },
@@ -25,27 +25,27 @@ const spendingData = [
   { name: 'Thu', amount: 150 },
   { name: 'Fri', amount: 200 },
   { name: 'Sat', amount: 180 },
-  { name: 'Sun', amount: 100 },
-]
+  { name: 'Sun', amount: 100 }
+];
 
-const categoryData = budgetData.map(item => ({
+const categoryData = budgetData.map((item) => ({
   name: item.category,
-  value: item.spent,
-}))
+  value: item.spent
+}));
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
 export default function BudgetDashboard() {
-  const [dateRange, setDateRange] = useState('This Month')
+  const [dateRange, setDateRange] = useState('This Month');
 
-  const totalBudget = budgetData.reduce((sum, item) => sum + item.budget, 0)
-  const totalSpent = budgetData.reduce((sum, item) => sum + item.spent, 0)
-  const remainingBudget = totalBudget - totalSpent
-  const dailyAverage = totalSpent / 30 // Assuming 30 days in a month
+  const totalBudget = budgetData.reduce((sum, item) => sum + item.budget, 0);
+  const totalSpent = budgetData.reduce((sum, item) => sum + item.spent, 0);
+  const remainingBudget = totalBudget - totalSpent;
+  const dailyAverage = totalSpent / 30; // Assuming 30 days in a month
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <header className="flex justify-between items-center mb-6">
+    <div className="container mx-auto space-y-6 p-4">
+      <header className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Budget Analysis</h1>
         <div className="flex items-center space-x-4">
           <Select value={dateRange} onValueChange={setDateRange}>
@@ -78,14 +78,16 @@ export default function BudgetDashboard() {
             <CardTitle className="text-sm font-medium">Total Budget vs Actual</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalSpent.toFixed(2)} / ${totalBudget.toFixed(2)}</div>
+            <div className="text-2xl font-bold">
+              ${totalSpent.toFixed(2)} / ${totalBudget.toFixed(2)}
+            </div>
             <p className="text-xs text-muted-foreground">
               {totalSpent > totalBudget ? (
-                <span className="text-red-500 flex items-center">
+                <span className="flex items-center text-red-500">
                   <TrendingUp className="mr-1 h-4 w-4" /> Over budget
                 </span>
               ) : (
-                <span className="text-green-500 flex items-center">
+                <span className="flex items-center text-green-500">
                   <TrendingDown className="mr-1 h-4 w-4" /> Under budget
                 </span>
               )}
@@ -129,11 +131,11 @@ export default function BudgetDashboard() {
           <div className="space-y-4">
             {budgetData.map((category, index) => (
               <div key={category.category} className="flex items-center">
-                <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center mr-3 text-2xl">
+                <div className="mr-3 flex h-9 w-9 items-center justify-center rounded-full bg-muted text-2xl">
                   {category.icon}
                 </div>
                 <div className="flex-1">
-                  <div className="flex justify-between mb-1">
+                  <div className="mb-1 flex justify-between">
                     <span className="text-sm font-medium">{category.category}</span>
                     <span className="text-sm font-medium">
                       ${category.spent.toFixed(2)} / ${category.budget.toFixed(2)}
@@ -141,9 +143,7 @@ export default function BudgetDashboard() {
                   </div>
                   <Progress value={(category.spent / category.budget) * 100} className="h-2" />
                 </div>
-                <div className="ml-3 text-sm font-medium">
-                  {((category.spent / category.budget) * 100).toFixed(0)}%
-                </div>
+                <div className="ml-3 text-sm font-medium">{((category.spent / category.budget) * 100).toFixed(0)}%</div>
               </div>
             ))}
           </div>
@@ -172,7 +172,7 @@ export default function BudgetDashboard() {
               </TabsContent>
               <TabsContent value="weekly">
                 {/* Weekly chart would go here */}
-                <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                <div className="flex h-[300px] items-center justify-center text-muted-foreground">
                   Weekly data visualization
                 </div>
               </TabsContent>
@@ -206,7 +206,7 @@ export default function BudgetDashboard() {
               {categoryData.map((entry, index) => (
                 <div key={entry.name} className="flex items-center">
                   <div
-                    className="w-3 h-3 rounded-full mr-2"
+                    className="mr-2 h-3 w-3 rounded-full"
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   />
                   <span className="text-sm">{entry.name}</span>
@@ -233,7 +233,9 @@ export default function BudgetDashboard() {
             </div>
             <div>
               <h3 className="font-semibold">Savings Opportunities</h3>
-              <p className="text-sm text-muted-foreground">You could save $50 by reducing your daily coffee purchases.</p>
+              <p className="text-sm text-muted-foreground">
+                You could save $50 by reducing your daily coffee purchases.
+              </p>
             </div>
             <div>
               <h3 className="font-semibold">Category Comparisons</h3>
@@ -241,11 +243,13 @@ export default function BudgetDashboard() {
             </div>
             <div>
               <h3 className="font-semibold">Projected Overages</h3>
-              <p className="text-sm text-muted-foreground">You're on track to exceed your entertainment budget by $30 this month.</p>
+              <p className="text-sm text-muted-foreground">
+                You&apos;re on track to exceed your entertainment budget by $30 this month.
+              </p>
             </div>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

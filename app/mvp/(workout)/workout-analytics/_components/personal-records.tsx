@@ -65,6 +65,15 @@ const personalRecordsData = [
   }
 ];
 
+type PersonalRecord = {
+  id: number;
+  exercise: string;
+  weight: number;
+  previousRecord: number;
+  date: string;
+  history: { weight: number; date: string }[];
+};
+
 type Props = {
   personalRecords: PersonalRecord[];
 };

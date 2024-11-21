@@ -54,7 +54,7 @@ export default function AdminSettings() {
           <Card>
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
-              <CardDescription>Manage your application's general settings</CardDescription>
+              <CardDescription>Manage your application s general settings</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">

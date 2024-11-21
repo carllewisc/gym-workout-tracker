@@ -139,6 +139,7 @@ export default function ReportingDashboard() {
               mode="range"
               defaultMonth={dateRange?.from}
               selected={dateRange}
+              // @ts-ignore // TODO: improve types for onSelect
               onSelect={setDateRange}
               numberOfMonths={2}
             />

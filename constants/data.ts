@@ -163,24 +163,6 @@ export const navItems: NavItem[] = [
         url: '/dashboard/workout-tracker',
         icon: 'userPen',
         shortcut: ['m', 'm']
-      },
-      {
-        title: 'Workout tracker 2',
-        url: '/dashboard/workout-tracker-2',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
-      },
-      {
-        title: 'Workout tracker 3',
-        url: '/dashboard/workout-tracker-3',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
-      },
-      {
-        title: 'Workout tracker 4',
-        url: '/dashboard/workout-tracker-4',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
       }
     ]
   },
@@ -196,7 +178,7 @@ export const navItems: NavItem[] = [
         url: '/dashboard/exercise-management',
         icon: 'userPen',
         shortcut: ['m', 'm']
-      },
+      }
     ]
   },
   {

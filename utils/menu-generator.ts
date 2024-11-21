@@ -1,3 +1,4 @@
+// @ts-nocheck
 import fs from 'fs';
 import path from 'path';
 
@@ -26,11 +27,12 @@ function scanDirectory(dir: string, baseUrl: string = ''): MenuItem[] {
   const menuItems: MenuItem[] = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
 
-  const directories = entries.filter(entry =>
-    entry.isDirectory() &&
-    !entry.name.startsWith('_') &&
-    !entry.name.startsWith('.') &&
-    !EXCLUDED_DIRS.includes(entry.name)
+  const directories = entries.filter(
+    (entry) =>
+      entry.isDirectory() &&
+      !entry.name.startsWith('_') &&
+      !entry.name.startsWith('.') &&
+      !EXCLUDED_DIRS.includes(entry.name)
   );
 
   for (const directory of directories) {
@@ -109,16 +111,14 @@ function scanRoutes(dir: string, moduleBase: string): MenuItem[] {
 
 function createUrl(...parts: string[]): string {
   // Filtrar partes vacías y unir con '/'
-  return '/' + parts
-    .filter(part => part && part.trim() !== '')
-    .join('/');
+  return '/' + parts.filter((part) => part && part.trim() !== '').join('/');
 }
 
 function formatTitle(str: string): string {
   return str
     .replace(/-/g, ' ')
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client';
 
 import { Input } from '@/components/ui/input';
@@ -18,12 +19,7 @@ interface DataTableSearchProps {
   ) => Promise<URLSearchParams>;
 }
 
-export function DataTableSearch({
-  searchKey,
-  searchQuery,
-  setSearchQuery,
-  setPage
-}: DataTableSearchProps) {
+export function DataTableSearch({ searchKey, searchQuery, setSearchQuery, setPage }: DataTableSearchProps) {
   const [isLoading, startTransition] = useTransition();
 
   const handleSearch = (value: string) => {

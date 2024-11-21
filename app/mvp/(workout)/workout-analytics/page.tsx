@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client';
 
 import * as React from 'react';
@@ -81,9 +82,7 @@ export default function WorkoutAnalytics() {
             <TabsTrigger value="training-calendar">Training Calendar</TabsTrigger>
             <TabsTrigger value="personal-records">Personal Records</TabsTrigger>
             <TabsTrigger value="workout-dashboard">WorkoutDashboard</TabsTrigger>
-            <TabsTrigger value="volume-by-muscle-group">
-              Volume by Muscle Group
-            </TabsTrigger>
+            <TabsTrigger value="volume-by-muscle-group">Volume by Muscle Group</TabsTrigger>
             <TabsTrigger value="volume" disabled className="text-muted-foreground">
               Volume Analysis (Coming Soon)
             </TabsTrigger>

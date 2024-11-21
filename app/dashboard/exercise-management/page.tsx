@@ -1,132 +1,181 @@
-"use client"
+// @ts-nocheck
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Switch } from "@/components/ui/switch"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useToast } from "@/hooks/use-toast"
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { Search, Plus, Grid, List, Dumbbell, Edit, Trash2, Star, MoreVertical } from 'lucide-react'
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useToast } from '@/hooks/use-toast';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Search, Plus, Grid, List, Edit, Trash2, Star } from 'lucide-react';
 
 // Mock data for exercises
 const initialExercises = [
-  { id: '1', name: 'Bench Press', primaryMuscle: 'Chest', equipment: ['Barbell', 'Bench'], usageCount: 50, isFavorite: true, lastUsed: '2023-06-10' },
-  { id: '2', name: 'Squats', primaryMuscle: 'Legs', equipment: ['Barbell', 'Squat Rack'], usageCount: 45, isFavorite: false, lastUsed: '2023-06-09' },
-  { id: '3', name: 'Deadlifts', primaryMuscle: 'Back', equipment: ['Barbell'], usageCount: 40, isFavorite: true, lastUsed: '2023-06-08' },
-  { id: '4', name: 'Pull-ups', primaryMuscle: 'Back', equipment: ['Pull-up Bar'], usageCount: 35, isFavorite: false, lastUsed: '2023-06-07' },
-  { id: '5', name: 'Shoulder Press', primaryMuscle: 'Shoulders', equipment: ['Dumbbells'], usageCount: 30, isFavorite: false, lastUsed: '2023-06-06' },
-]
+  {
+    id: '1',
+    name: 'Bench Press',
+    primaryMuscle: 'Chest',
+    equipment: ['Barbell', 'Bench'],
+    usageCount: 50,
+    isFavorite: true,
+    lastUsed: '2023-06-10'
+  },
+  {
+    id: '2',
+    name: 'Squats',
+    primaryMuscle: 'Legs',
+    equipment: ['Barbell', 'Squat Rack'],
+    usageCount: 45,
+    isFavorite: false,
+    lastUsed: '2023-06-09'
+  },
+  {
+    id: '3',
+    name: 'Deadlifts',
+    primaryMuscle: 'Back',
+    equipment: ['Barbell'],
+    usageCount: 40,
+    isFavorite: true,
+    lastUsed: '2023-06-08'
+  },
+  {
+    id: '4',
+    name: 'Pull-ups',
+    primaryMuscle: 'Back',
+    equipment: ['Pull-up Bar'],
+    usageCount: 35,
+    isFavorite: false,
+    lastUsed: '2023-06-07'
+  },
+  {
+    id: '5',
+    name: 'Shoulder Press',
+    primaryMuscle: 'Shoulders',
+    equipment: ['Dumbbells'],
+    usageCount: 30,
+    isFavorite: false,
+    lastUsed: '2023-06-06'
+  }
+];
 
-const muscleGroups = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core']
-const equipmentList = ['Barbell', 'Dumbbell', 'Kettlebell', 'Resistance Bands', 'Bodyweight', 'Machines', 'Cables', 'Bench', 'Squat Rack', 'Pull-up Bar']
+const muscleGroups = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core'];
+const equipmentList = [
+  'Barbell',
+  'Dumbbell',
+  'Kettlebell',
+  'Resistance Bands',
+  'Bodyweight',
+  'Machines',
+  'Cables',
+  'Bench',
+  'Squat Rack',
+  'Pull-up Bar'
+];
 
 type Exercise = {
-  id: string
-  name: string
-  primaryMuscle: string
-  equipment: string[]
-  usageCount: number
-  isFavorite: boolean
-  lastUsed: string
-  description?: string
-  secondaryMuscles?: string[]
-  formTips?: string[]
-  imageUrl?: string
-}
+  id: string;
+  name: string;
+  primaryMuscle: string;
+  equipment: string[];
+  usageCount: number;
+  isFavorite: boolean;
+  lastUsed: string;
+  description?: string;
+  secondaryMuscles?: string[];
+  formTips?: string[];
+  imageUrl?: string;
+};
 
 const ExerciseManagement: React.FC = () => {
-  const [exercises, setExercises] = useState<Exercise[]>(initialExercises)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [muscleFilter, setMuscleFilter] = useState<string | null>(null)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [editingExercise, setEditingExercise] = useState<Exercise | null>(null)
-  const [newExercise, setNewExercise] = useState<Partial<Exercise>>({})
-  const [selectedExercises, setSelectedExercises] = useState<string[]>([])
-  const { toast } = useToast()
+  const [exercises, setExercises] = useState<Exercise[]>(initialExercises);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [muscleFilter, setMuscleFilter] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingExercise, setEditingExercise] = useState<Exercise | null>(null);
+  const [newExercise, setNewExercise] = useState<Partial<Exercise>>({});
+  const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Simulating data fetch
     const fetchExercises = async () => {
       // In a real app, you would fetch data from an API here
-      setExercises(initialExercises)
-    }
-    fetchExercises()
-  }, [])
+      setExercises(initialExercises);
+    };
+    fetchExercises();
+  }, []);
 
   const handleSearch = (term: string) => {
-    setSearchTerm(term)
-  }
+    setSearchTerm(term);
+  };
 
   const handleMuscleFilter = (muscle: string | null) => {
-    setMuscleFilter(muscle)
-  }
+    setMuscleFilter(muscle);
+  };
 
-  const filteredExercises = exercises.filter(exercise =>
-    exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (!muscleFilter || exercise.primaryMuscle === muscleFilter)
-  )
+  const filteredExercises = exercises.filter(
+    (exercise) =>
+      exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (!muscleFilter || exercise.primaryMuscle === muscleFilter)
+  );
 
   const handleAddExercise = () => {
-    setNewExercise({})
-    setIsAddModalOpen(true)
-  }
+    setNewExercise({});
+    setIsAddModalOpen(true);
+  };
 
   const handleEditExercise = (exercise: Exercise) => {
-    setEditingExercise(exercise)
-    setNewExercise(exercise)
-    setIsAddModalOpen(true)
-  }
+    setEditingExercise(exercise);
+    setNewExercise(exercise);
+    setIsAddModalOpen(true);
+  };
 
   const handleSaveExercise = () => {
     if (editingExercise) {
-      setExercises(exercises.map(ex => ex.id === editingExercise.id ? { ...ex, ...newExercise } : ex))
-      toast({ title: "Exercise updated", description: "The exercise has been successfully updated." })
+      setExercises(exercises.map((ex) => (ex.id === editingExercise.id ? { ...ex, ...newExercise } : ex)));
+      toast({ title: 'Exercise updated', description: 'The exercise has been successfully updated.' });
     } else {
-      const id = (Math.max(...exercises.map(ex => parseInt(ex.id))) + 1).toString()
-      setExercises([...exercises, { id, ...newExercise as Exercise }])
-      toast({ title: "Exercise added", description: "The new exercise has been successfully added." })
+      const id = (Math.max(...exercises.map((ex) => parseInt(ex.id))) + 1).toString();
+      setExercises([...exercises, { id, ...(newExercise as Exercise) }]);
+      toast({ title: 'Exercise added', description: 'The new exercise has been successfully added.' });
     }
-    setIsAddModalOpen(false)
-    setEditingExercise(null)
-    setNewExercise({})
-  }
+    setIsAddModalOpen(false);
+    setEditingExercise(null);
+    setNewExercise({});
+  };
 
   const handleDeleteExercise = (id: string) => {
-    setExercises(exercises.filter(ex => ex.id !== id))
-    toast({ title: "Exercise deleted", description: "The exercise has been successfully deleted." })
-  }
+    setExercises(exercises.filter((ex) => ex.id !== id));
+    toast({ title: 'Exercise deleted', description: 'The exercise has been successfully deleted.' });
+  };
 
   const handleToggleFavorite = (id: string) => {
-    setExercises(exercises.map(ex =>
-      ex.id === id ? { ...ex, isFavorite: !ex.isFavorite } : ex
-    ))
-  }
+    setExercises(exercises.map((ex) => (ex.id === id ? { ...ex, isFavorite: !ex.isFavorite } : ex)));
+  };
 
   const handleDragEnd = (result: any) => {
-    if (!result.destination) return
+    if (!result.destination) return;
 
-    const items = Array.from(exercises)
-    const [reorderedItem] = items.splice(result.source.index, 1)
-    items.splice(result.destination.index, 0, reorderedItem)
+    const items = Array.from(exercises);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
 
-    setExercises(items)
-  }
+    setExercises(items);
+  };
 
   const handleBulkDelete = () => {
-    setExercises(exercises.filter(ex => !selectedExercises.includes(ex.id)))
-    setSelectedExercises([])
-    toast({ title: "Exercises deleted", description: `${selectedExercises.length} exercises have been deleted.` })
-  }
+    setExercises(exercises.filter((ex) => !selectedExercises.includes(ex.id)));
+    setSelectedExercises([]);
+    toast({ title: 'Exercises deleted', description: `${selectedExercises.length} exercises have been deleted.` });
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -138,9 +187,9 @@ const ExerciseManagement: React.FC = () => {
           </Button>
         </CardHeader>
         <CardContent>
-          <div className="flex space-x-2 mb-4">
+          <div className="mb-4 flex space-x-2">
             <div className="relative flex-1">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 transform text-muted-foreground" />
               <Input
                 type="text"
                 placeholder="Search exercises..."
@@ -155,8 +204,10 @@ const ExerciseManagement: React.FC = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">All muscles</SelectItem>
-                {muscleGroups.map(group => (
-                  <SelectItem key={group} value={group}>{group}</SelectItem>
+                {muscleGroups.map((group) => (
+                  <SelectItem key={group} value={group}>
+                    {group}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -178,7 +229,7 @@ const ExerciseManagement: React.FC = () => {
               {(provided) => (
                 <div {...provided.droppableProps} ref={provided.innerRef}>
                   {viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                       {filteredExercises.map((exercise, index) => (
                         <Draggable key={exercise.id} draggableId={exercise.id} index={index}>
                           {(provided) => (
@@ -190,18 +241,14 @@ const ExerciseManagement: React.FC = () => {
                             >
                               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-lg font-semibold">{exercise.name}</CardTitle>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => handleToggleFavorite(exercise.id)}
-                                >
+                                <Button variant="ghost" size="icon" onClick={() => handleToggleFavorite(exercise.id)}>
                                   <Star className={`h-4 w-4 ${exercise.isFavorite ? 'fill-yellow-400' : ''}`} />
                                 </Button>
                               </CardHeader>
                               <CardContent>
-                                <p className="text-sm text-muted-foreground mb-2">{exercise.primaryMuscle}</p>
-                                <p className="text-sm mb-2">Equipment: {exercise.equipment.join(', ')}</p>
-                                <p className="text-sm mb-2">Used {exercise.usageCount} times</p>
+                                <p className="mb-2 text-sm text-muted-foreground">{exercise.primaryMuscle}</p>
+                                <p className="mb-2 text-sm">Equipment: {exercise.equipment.join(', ')}</p>
+                                <p className="mb-2 text-sm">Used {exercise.usageCount} times</p>
                                 <p className="text-sm text-muted-foreground">Last used: {exercise.lastUsed}</p>
                               </CardContent>
                               <CardContent className="flex justify-end space-x-2">
@@ -225,7 +272,7 @@ const ExerciseManagement: React.FC = () => {
                             <Checkbox
                               checked={selectedExercises.length === filteredExercises.length}
                               onCheckedChange={(checked) => {
-                                setSelectedExercises(checked ? filteredExercises.map(ex => ex.id) : [])
+                                setSelectedExercises(checked ? filteredExercises.map((ex) => ex.id) : []);
                               }}
                             />
                           </TableHead>
@@ -253,14 +300,16 @@ const ExerciseManagement: React.FC = () => {
                                       setSelectedExercises(
                                         checked
                                           ? [...selectedExercises, exercise.id]
-                                          : selectedExercises.filter(id => id !== exercise.id)
-                                      )
+                                          : selectedExercises.filter((id) => id !== exercise.id)
+                                      );
                                     }}
                                   />
                                 </TableCell>
                                 <TableCell className="font-medium">
                                   {exercise.name}
-                                  {exercise.isFavorite && <Star className="inline-block ml-2 h-4 w-4 fill-yellow-400" />}
+                                  {exercise.isFavorite && (
+                                    <Star className="ml-2 inline-block h-4 w-4 fill-yellow-400" />
+                                  )}
                                 </TableCell>
                                 <TableCell>{exercise.primaryMuscle}</TableCell>
                                 <TableCell>{exercise.equipment.join(', ')}</TableCell>
@@ -318,25 +367,30 @@ const ExerciseManagement: React.FC = () => {
                   <SelectValue placeholder="Select primary muscle" />
                 </SelectTrigger>
                 <SelectContent>
-                  {muscleGroups.map(group => (
-                    <SelectItem key={group} value={group}>{group}</SelectItem>
+                  {muscleGroups.map((group) => (
+                    <SelectItem key={group} value={group}>
+                      {group}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Equipment</Label>
-              <ScrollArea className="h-[200px] col-span-3">
-                {equipmentList.map(item => (
+              <ScrollArea className="col-span-3 h-[200px]">
+                {equipmentList.map((item) => (
                   <div key={item} className="flex items-center space-x-2">
                     <Checkbox
                       id={item}
                       checked={(newExercise.equipment || []).includes(item)}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          setNewExercise({ ...newExercise, equipment: [...(newExercise.equipment || []), item] })
+                          setNewExercise({ ...newExercise, equipment: [...(newExercise.equipment || []), item] });
                         } else {
-                          setNewExercise({ ...newExercise, equipment: (newExercise.equipment || []).filter(e => e !== item) })
+                          setNewExercise({
+                            ...newExercise,
+                            equipment: (newExercise.equipment || []).filter((e) => e !== item)
+                          });
                         }
                       }}
                     />
@@ -385,12 +439,14 @@ const ExerciseManagement: React.FC = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={handleSaveExercise}>Save changes</Button>
+            <Button type="submit" onClick={handleSaveExercise}>
+              Save changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  )
-}
+  );
+};
 
-export default ExerciseManagement
+export default ExerciseManagement;

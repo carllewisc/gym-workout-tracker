@@ -1,75 +1,73 @@
-"use client"
+'use client';
 
-import { useState, useRef, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Toast } from "@/components/ui/toast"
-import { useToast } from "@/hooks/use-toast"
-import { ChevronDown, ChevronUp, X, Dumbbell, Clock, Copy, Trash2, Zap, Plus, Minus } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useToast } from '@/hooks/use-toast';
+import { ChevronDown, ChevronUp, X, Dumbbell, Clock, Copy, Trash2, Zap, Plus, Minus } from 'lucide-react';
 
 type Set = {
-  id: string
-  number: number
-  weight: number
-  reps: number
-  isWarmup: boolean
-  restTime: number
-}
+  id: string;
+  number: number;
+  weight: number;
+  reps: number;
+  isWarmup: boolean;
+  restTime: number;
+};
 
-type ExerciseSetTrackerProps = {
-  exerciseName: string
-  muscleGroup: string
-  onRemoveExercise: () => void
-  isMetric: boolean
+export type ExerciseSetTrackerProps = {
+  exerciseName: string;
+  muscleGroup: string;
+  onRemoveExercise: () => void;
+  isMetric: boolean;
   previousWorkout?: {
-    sets: { weight: number; reps: number }[]
-  }
-}
+    sets: { weight: number; reps: number }[];
+  };
+};
 
-const ExerciseSetTracker: React.FC<ExerciseSetTrackerProps> = ({
-                                                                 exerciseName,
-                                                                 muscleGroup,
-                                                                 onRemoveExercise,
-                                                                 isMetric,
-                                                                 previousWorkout
-                                                               }) => {
-  const [sets, setSets] = useState<Set[]>([{ id: '1', number: 1, weight: 0, reps: 0, isWarmup: false, restTime: 90 }])
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const [activeRestTimer, setActiveRestTimer] = useState<string | null>(null)
-  const [restTimeRemaining, setRestTimeRemaining] = useState<number>(0)
-  const { toast } = useToast()
-  const lastInputRef = useRef<HTMLInputElement>(null)
+const ExerciseSetTracker = ({
+  exerciseName,
+  muscleGroup,
+  onRemoveExercise,
+  isMetric,
+  previousWorkout
+}: ExerciseSetTrackerProps) => {
+  const [sets, setSets] = useState<Set[]>([{ id: '1', number: 1, weight: 0, reps: 0, isWarmup: false, restTime: 90 }]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activeRestTimer, setActiveRestTimer] = useState<string | null>(null);
+  const [restTimeRemaining, setRestTimeRemaining] = useState<number>(0);
+  const { toast } = useToast();
+  const lastInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (lastInputRef.current) {
-      lastInputRef.current.focus()
+      lastInputRef.current.focus();
     }
-  }, [sets])
+  }, [sets]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    let interval: NodeJS.Timeout;
     if (activeRestTimer) {
       interval = setInterval(() => {
         setRestTimeRemaining((prev) => {
           if (prev <= 1) {
-            clearInterval(interval)
-            setActiveRestTimer(null)
+            clearInterval(interval);
+            setActiveRestTimer(null);
             toast({
-              title: "Rest Time Complete",
-              description: `Time to start your next set of ${exerciseName}!`,
-            })
-            return 0
+              title: 'Rest Time Complete',
+              description: `Time to start your next set of ${exerciseName}!`
+            });
+            return 0;
           }
-          return prev - 1
-        })
-      }, 1000)
+          return prev - 1;
+        });
+      }, 1000);
     }
-    return () => clearInterval(interval)
-  }, [activeRestTimer, exerciseName, toast])
+    return () => clearInterval(interval);
+  }, [activeRestTimer, exerciseName, toast]);
 
   const handleAddSet = () => {
     const newSet: Set = {
@@ -79,54 +77,50 @@ const ExerciseSetTracker: React.FC<ExerciseSetTrackerProps> = ({
       reps: sets[sets.length - 1].reps,
       isWarmup: false,
       restTime: sets[sets.length - 1].restTime
-    }
-    setSets([...sets, newSet])
-  }
+    };
+    setSets([...sets, newSet]);
+  };
 
   const handleUpdateSet = (id: string, field: keyof Set, value: number | boolean) => {
-    setSets(sets.map(set =>
-      set.id === id ? { ...set, [field]: value } : set
-    ))
-  }
+    setSets(sets.map((set) => (set.id === id ? { ...set, [field]: value } : set)));
+  };
 
   const handleCopyPreviousSet = (index: number) => {
     if (index > 0) {
-      const previousSet = sets[index - 1]
-      setSets(sets.map((set, idx) =>
-        idx === index ? { ...set, weight: previousSet.weight, reps: previousSet.reps } : set
-      ))
+      const previousSet = sets[index - 1];
+      setSets(
+        sets.map((set, idx) => (idx === index ? { ...set, weight: previousSet.weight, reps: previousSet.reps } : set))
+      );
     }
-  }
+  };
 
   const handleDeleteSet = (id: string) => {
-    setSets(sets.filter(set => set.id !== id).map((set, index) => ({ ...set, number: index + 1 })))
-  }
+    setSets(sets.filter((set) => set.id !== id).map((set, index) => ({ ...set, number: index + 1 })));
+  };
 
   const handleToggleWarmup = (id: string) => {
-    setSets(sets.map(set =>
-      set.id === id ? { ...set, isWarmup: !set.isWarmup } : set
-    ))
-  }
+    setSets(sets.map((set) => (set.id === id ? { ...set, isWarmup: !set.isWarmup } : set)));
+  };
 
   const startRestTimer = (id: string) => {
-    const set = sets.find(s => s.id === id)
+    const set = sets.find((s) => s.id === id);
     if (set) {
-      setActiveRestTimer(id)
-      setRestTimeRemaining(set.restTime)
+      setActiveRestTimer(id);
+      setRestTimeRemaining(set.restTime);
     }
-  }
+  };
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
     <Card className="mb-4">
       <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-2xl font-bold flex items-center">
+          <CardTitle className="flex items-center text-2xl font-bold">
             <Dumbbell className="mr-2 h-6 w-6 text-[#E5BA73]" />
             {exerciseName}
             <span className="ml-2 text-sm font-normal text-muted-foreground">({muscleGroup})</span>
@@ -146,11 +140,13 @@ const ExerciseSetTracker: React.FC<ExerciseSetTrackerProps> = ({
           <CardContent>
             <div className="space-y-2">
               {sets.map((set, index) => (
-                <div key={set.id} className="flex items-center space-x-2 p-2 bg-muted rounded-md">
+                <div key={set.id} className="flex items-center space-x-2 rounded-md bg-muted p-2">
                   <span className="w-8 text-center font-medium">{set.number}</span>
-                  <div className="flex-1 flex items-center space-x-2">
+                  <div className="flex flex-1 items-center space-x-2">
                     <div className="flex-1">
-                      <Label htmlFor={`weight-${set.id}`} className="sr-only">Weight</Label>
+                      <Label htmlFor={`weight-${set.id}`} className="sr-only">
+                        Weight
+                      </Label>
                       <div className="flex items-center">
                         <Button
                           variant="outline"
@@ -179,7 +175,9 @@ const ExerciseSetTracker: React.FC<ExerciseSetTrackerProps> = ({
                       </div>
                     </div>
                     <div className="flex-1">
-                      <Label htmlFor={`reps-${set.id}`} className="sr-only">Reps</Label>
+                      <Label htmlFor={`reps-${set.id}`} className="sr-only">
+                        Reps
+                      </Label>
                       <div className="flex items-center">
                         <Button
                           variant="outline"
@@ -210,12 +208,7 @@ const ExerciseSetTracker: React.FC<ExerciseSetTrackerProps> = ({
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => startRestTimer(set.id)}
-                    >
+                    <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => startRestTimer(set.id)}>
                       <Clock className="h-4 w-4" />
                     </Button>
                     <div className="flex space-x-1">
@@ -227,16 +220,11 @@ const ExerciseSetTracker: React.FC<ExerciseSetTrackerProps> = ({
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => handleDeleteSet(set.id)}
-                      >
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDeleteSet(set.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                       <Button
-                        variant={set.isWarmup ? "secondary" : "ghost"}
+                        variant={set.isWarmup ? 'secondary' : 'ghost'}
                         size="icon"
                         className="h-8 w-8"
                         onClick={() => handleToggleWarmup(set.id)}
@@ -246,9 +234,7 @@ const ExerciseSetTracker: React.FC<ExerciseSetTrackerProps> = ({
                     </div>
                   </div>
                   {activeRestTimer === set.id && (
-                    <div className="text-sm font-medium text-[#E5BA73]">
-                      {formatTime(restTimeRemaining)}
-                    </div>
+                    <div className="text-sm font-medium text-[#E5BA73]">{formatTime(restTimeRemaining)}</div>
                   )}
                 </div>
               ))}
@@ -260,7 +246,7 @@ const ExerciseSetTracker: React.FC<ExerciseSetTrackerProps> = ({
         </CollapsibleContent>
       </Collapsible>
     </Card>
-  )
-}
+  );
+};
 
-export default ExerciseSetTracker
+export default ExerciseSetTracker;
