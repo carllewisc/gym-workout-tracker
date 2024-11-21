@@ -131,6 +131,123 @@ export const navItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
+    title: 'Gym',
+    url: '#',
+    icon: 'gym',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [
+      {
+        title: 'Workouts',
+        url: '/dashboard/workout',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Gym 3',
+        url: '/dashboard/gym-3',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      }
+    ]
+  },
+  {
+    title: 'Modulo workout exercise',
+    url: '#',
+    icon: 'dashboard',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [
+      {
+        title: 'Exercise 1',
+        url: '/dashboard/workout-tracker',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Workout tracker 2',
+        url: '/dashboard/workout-tracker-2',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Workout tracker 3',
+        url: '/dashboard/workout-tracker-3',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Workout tracker 4',
+        url: '/dashboard/workout-tracker-4',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      }
+    ]
+  },
+  {
+    title: 'Modulo Exercise Management',
+    url: '#',
+    icon: 'dashboard',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [
+      {
+        title: 'Exercise management',
+        url: '/dashboard/exercise-management',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
+    ]
+  },
+  {
+    title: 'Modulo workout-plans-dashboard',
+    url: '#',
+    icon: 'dashboard',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [
+      {
+        title: 'Workout plans dashboard',
+        url: '/dashboard/workout-plans-dashboard',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      }
+    ]
+  },
+  {
+    title: 'Modulo management exercise',
+    url: '#',
+    icon: 'gym',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [
+      {
+        title: 'Exercise',
+        url: '/dashboard/exercise',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Exercise List',
+        url: '/dashboard/list',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Create Exercise List',
+        url: '/dashboard/list-3',
+        icon: 'add',
+        shortcut: ['c', 'c']
+      },
+      {
+        title: 'List',
+        url: '/dashboard/list',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      }
+    ]
+  },
+  {
     title: 'Employee',
     url: '/dashboard/employee',
     icon: 'user',

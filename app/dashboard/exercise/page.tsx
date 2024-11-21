@@ -39,9 +39,8 @@ export default function ExerciseManagement() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null);
   const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(null);
-  const [newExercise, setNewExercise] = useState<Omit<Exercise, '_id'>>({
+  const [newExercise, setNewExercise] = useState<Partial<Omit<Exercise, '_id'>>>({
     name: '',
-    muscle: 'Chest',
     image: ''
   });
 
@@ -140,7 +139,7 @@ export default function ExerciseManagement() {
                   Muscle
                 </Label>
                 <Select
-                  value={newExercise.muscle}
+                  value={newExercise.muscle || ''}
                   onValueChange={(value: MuscleGroup) => setNewExercise({ ...newExercise, muscle: value })}
                 >
                   <SelectTrigger className="col-span-3">

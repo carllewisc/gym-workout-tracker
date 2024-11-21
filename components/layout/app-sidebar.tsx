@@ -51,9 +51,16 @@ export const company = {
   plan: 'Enterprise'
 };
 
-export default function AppSidebar() {
+export default function AppSidebar({menuItems = []} : { menuItems: any }) {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const newMenuItems = !Array.isArray(menuItems)
+    ? navItems
+    : [
+      menuItems?.find((item) => item.title === 'Module Mvp'),
+      menuItems?.find((item) => item.title === 'Module Dashboard'),
+      ...navItems
+    ].filter(Boolean);
 
   return (
     <Sidebar collapsible="icon">
@@ -72,7 +79,7 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarMenu>
-            {navItems.map((item) => {
+            {newMenuItems.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo;
               return item?.items && item?.items?.length > 0 ? (
                 <Collapsible
