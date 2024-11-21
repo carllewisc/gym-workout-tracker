@@ -1,107 +1,121 @@
-"use client"
+'use client';
 
-import React, { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { useToast } from "@/hooks/use-toast"
-import { addDays, format } from "date-fns"
-import { CalendarIcon, Download, LineChartIcon, BarChartIcon, PieChartIcon, Loader2 } from 'lucide-react'
-import { Line, LineChart, Bar, BarChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell } from "recharts"
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { useToast } from '@/hooks/use-toast';
+import { addDays, format } from 'date-fns';
+import { CalendarIcon, Download, LineChartIcon, BarChartIcon, PieChartIcon, Loader2 } from 'lucide-react';
+import {
+  Line,
+  LineChart,
+  Bar,
+  BarChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Cell
+} from 'recharts';
 
 // Mock data for the charts
 const dailyActiveUsersData = [
-  { date: "2024-03-01", users: 1200 },
-  { date: "2024-03-02", users: 1300 },
-  { date: "2024-03-03", users: 1100 },
-  { date: "2024-03-04", users: 1400 },
-  { date: "2024-03-05", users: 1600 },
-  { date: "2024-03-06", users: 1500 },
-  { date: "2024-03-07", users: 1700 },
-]
+  { date: '2024-03-01', users: 1200 },
+  { date: '2024-03-02', users: 1300 },
+  { date: '2024-03-03', users: 1100 },
+  { date: '2024-03-04', users: 1400 },
+  { date: '2024-03-05', users: 1600 },
+  { date: '2024-03-06', users: 1500 },
+  { date: '2024-03-07', users: 1700 }
+];
 
 const newUserRegistrationsData = [
-  { date: "2024-03-01", users: 50 },
-  { date: "2024-03-02", users: 45 },
-  { date: "2024-03-03", users: 60 },
-  { date: "2024-03-04", users: 55 },
-  { date: "2024-03-05", users: 70 },
-  { date: "2024-03-06", users: 65 },
-  { date: "2024-03-07", users: 80 },
-]
+  { date: '2024-03-01', users: 50 },
+  { date: '2024-03-02', users: 45 },
+  { date: '2024-03-03', users: 60 },
+  { date: '2024-03-04', users: 55 },
+  { date: '2024-03-05', users: 70 },
+  { date: '2024-03-06', users: 65 },
+  { date: '2024-03-07', users: 80 }
+];
 
 const userRetentionData = [
-  { week: "Week 1", retention: 100 },
-  { week: "Week 2", retention: 80 },
-  { week: "Week 3", retention: 70 },
-  { week: "Week 4", retention: 65 },
-  { week: "Week 5", retention: 60 },
-  { week: "Week 6", retention: 58 },
-  { week: "Week 7", retention: 55 },
-  { week: "Week 8", retention: 53 },
-]
+  { week: 'Week 1', retention: 100 },
+  { week: 'Week 2', retention: 80 },
+  { week: 'Week 3', retention: 70 },
+  { week: 'Week 4', retention: 65 },
+  { week: 'Week 5', retention: 60 },
+  { week: 'Week 6', retention: 58 },
+  { week: 'Week 7', retention: 55 },
+  { week: 'Week 8', retention: 53 }
+];
 
 const workoutCompletionData = [
-  { status: "Completed", value: 75 },
-  { status: "Partial", value: 15 },
-  { status: "Abandoned", value: 10 },
-]
+  { status: 'Completed', value: 75 },
+  { status: 'Partial', value: 15 },
+  { status: 'Abandoned', value: 10 }
+];
 
 const popularExercisesData = [
-  { name: "Bench Press", count: 1200 },
-  { name: "Squats", count: 1100 },
-  { name: "Deadlifts", count: 1000 },
-  { name: "Pull-ups", count: 900 },
-  { name: "Shoulder Press", count: 800 },
-]
+  { name: 'Bench Press', count: 1200 },
+  { name: 'Squats', count: 1100 },
+  { name: 'Deadlifts', count: 1000 },
+  { name: 'Pull-ups', count: 900 },
+  { name: 'Shoulder Press', count: 800 }
+];
 
 const muscleGroupUsageData = [
-  { group: "Chest", percentage: 25 },
-  { group: "Legs", percentage: 30 },
-  { group: "Back", percentage: 20 },
-  { group: "Shoulders", percentage: 15 },
-  { group: "Arms", percentage: 10 },
-]
+  { group: 'Chest', percentage: 25 },
+  { group: 'Legs', percentage: 30 },
+  { group: 'Back', percentage: 20 },
+  { group: 'Shoulders', percentage: 15 },
+  { group: 'Arms', percentage: 10 }
+];
 
 const equipmentUtilizationData = [
-  { equipment: "Barbell", usage: 35 },
-  { equipment: "Dumbbells", usage: 30 },
-  { equipment: "Machines", usage: 20 },
-  { equipment: "Bodyweight", usage: 10 },
-  { equipment: "Kettlebells", usage: 5 },
-]
+  { equipment: 'Barbell', usage: 35 },
+  { equipment: 'Dumbbells', usage: 30 },
+  { equipment: 'Machines', usage: 20 },
+  { equipment: 'Bodyweight', usage: 10 },
+  { equipment: 'Kettlebells', usage: 5 }
+];
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 export default function ReportingDashboard() {
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: addDays(new Date(), -7),
-    to: new Date(),
-  })
+    to: new Date()
+  });
 
   const handleExport = (format: string) => {
-    setIsLoading(true)
+    setIsLoading(true);
     // Simulating an export process
     setTimeout(() => {
-      setIsLoading(false)
+      setIsLoading(false);
       toast({
-        title: "Export Successful",
-        description: `Report exported in ${format.toUpperCase()} format.`,
-      })
-    }, 2000)
-  }
+        title: 'Export Successful',
+        description: `Report exported in ${format.toUpperCase()} format.`
+      });
+    }, 2000);
+  };
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
+    <div className="container mx-auto space-y-4 p-4">
       <h1 className="text-3xl font-bold">Reporting Dashboard</h1>
 
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="w-[280px] justify-start text-left font-normal">
@@ -109,11 +123,10 @@ export default function ReportingDashboard() {
               {dateRange?.from ? (
                 dateRange.to ? (
                   <>
-                    {format(dateRange.from, "LLL dd, y")} -{" "}
-                    {format(dateRange.to, "LLL dd, y")}
+                    {format(dateRange.from, 'LLL dd, y')} - {format(dateRange.to, 'LLL dd, y')}
                   </>
                 ) : (
-                  format(dateRange.from, "LLL dd, y")
+                  format(dateRange.from, 'LLL dd, y')
                 )
               ) : (
                 <span>Pick a date range</span>
@@ -202,9 +215,9 @@ export default function ReportingDashboard() {
               <ChartContainer
                 config={{
                   users: {
-                    label: "Active Users",
-                    color: "hsl(var(--chart-1))",
-                  },
+                    label: 'Active Users',
+                    color: 'hsl(var(--chart-1))'
+                  }
                 }}
                 className="h-[300px]"
               >
@@ -230,9 +243,9 @@ export default function ReportingDashboard() {
                 <ChartContainer
                   config={{
                     users: {
-                      label: "New Users",
-                      color: "hsl(var(--chart-2))",
-                    },
+                      label: 'New Users',
+                      color: 'hsl(var(--chart-2))'
+                    }
                   }}
                   className="h-[200px]"
                 >
@@ -257,9 +270,9 @@ export default function ReportingDashboard() {
                 <ChartContainer
                   config={{
                     retention: {
-                      label: "Retention Rate",
-                      color: "hsl(var(--chart-3))",
-                    },
+                      label: 'Retention Rate',
+                      color: 'hsl(var(--chart-3))'
+                    }
                   }}
                   className="h-[200px]"
                 >
@@ -285,9 +298,9 @@ export default function ReportingDashboard() {
               <ChartContainer
                 config={{
                   value: {
-                    label: "Percentage",
-                    color: "hsl(var(--chart-4))",
-                  },
+                    label: 'Percentage',
+                    color: 'hsl(var(--chart-4))'
+                  }
                 }}
                 className="h-[300px]"
               >
@@ -325,9 +338,9 @@ export default function ReportingDashboard() {
                 <ChartContainer
                   config={{
                     count: {
-                      label: "Usage Count",
-                      color: "hsl(var(--chart-5))",
-                    },
+                      label: 'Usage Count',
+                      color: 'hsl(var(--chart-5))'
+                    }
                   }}
                   className="h-[300px]"
                 >
@@ -352,9 +365,9 @@ export default function ReportingDashboard() {
                 <ChartContainer
                   config={{
                     percentage: {
-                      label: "Usage Percentage",
-                      color: "hsl(var(--chart-6))",
-                    },
+                      label: 'Usage Percentage',
+                      color: 'hsl(var(--chart-6))'
+                    }
                   }}
                   className="h-[300px]"
                 >
@@ -390,9 +403,9 @@ export default function ReportingDashboard() {
               <ChartContainer
                 config={{
                   usage: {
-                    label: "Usage Percentage",
-                    color: "hsl(var(--chart-7))",
-                  },
+                    label: 'Usage Percentage',
+                    color: 'hsl(var(--chart-7))'
+                  }
                 }}
                 className="h-[300px]"
               >
@@ -422,23 +435,25 @@ export default function ReportingDashboard() {
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Session Frequency</h4>
+                  <h4 className="mb-2 text-sm font-medium">Session Frequency</h4>
                   <p className="text-sm text-muted-foreground">On average, users log in 4.2 times per week.</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Workout Patterns</h4>
+                  <h4 className="mb-2 text-sm font-medium">Workout Patterns</h4>
                   <p className="text-sm text-muted-foreground">Most popular workout days: Monday, Wednesday, Friday</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Feature Usage</h4>
-                  <p className="text-sm text-muted-foreground">Top features: Workout Tracker, Progress Charts, Exercise Library</p>
+                  <h4 className="mb-2 text-sm font-medium">Feature Usage</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Top features: Workout Tracker, Progress Charts, Exercise Library
+                  </p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Device/Platform Stats</h4>
+                  <h4 className="mb-2 text-sm font-medium">Device/Platform Stats</h4>
                   <p className="text-sm text-muted-foreground">Mobile: 65%, Desktop: 30%, Tablet: 5%</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium mb-2">User Feedback Summary</h4>
+                  <h4 className="mb-2 text-sm font-medium">User Feedback Summary</h4>
                   <p className="text-sm text-muted-foreground">Average rating: 4.7/5 stars</p>
                 </div>
               </div>
@@ -455,11 +470,15 @@ export default function ReportingDashboard() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="reportName" className="text-sm font-medium">Report Name</label>
-              <input id="reportName" className="w-full p-2 border rounded" placeholder="Enter report name" />
+              <label htmlFor="reportName" className="text-sm font-medium">
+                Report Name
+              </label>
+              <input id="reportName" className="w-full rounded border p-2" placeholder="Enter report name" />
             </div>
             <div className="space-y-2">
-              <label htmlFor="schedule" className="text-sm font-medium">Schedule</label>
+              <label htmlFor="schedule" className="text-sm font-medium">
+                Schedule
+              </label>
               <Select>
                 <SelectTrigger id="schedule">
                   <SelectValue placeholder="Select frequency" />
@@ -497,5 +516,5 @@ export default function ReportingDashboard() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

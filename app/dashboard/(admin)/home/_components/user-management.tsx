@@ -1,98 +1,161 @@
-"use client"
+'use client';
 
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
-import { Search, Users, UserPlus, AlertCircle, MoreVertical, Send, Download, Trash2, Lock, CreditCard, PauseCircle, Bell } from 'lucide-react'
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import {
+  Search,
+  Users,
+  UserPlus,
+  AlertCircle,
+  MoreVertical,
+  Send,
+  Download,
+  Trash2,
+  Lock,
+  CreditCard,
+  PauseCircle,
+  Bell
+} from 'lucide-react';
 
 // Mock data for users
 const mockUsers = [
-  { id: '1', name: 'John Doe', email: 'john@example.com', avatar: '/placeholder-avatar.jpg', registrationDate: '2023-01-15', lastActive: '2024-03-10', subscriptionStatus: 'Active', workoutCount: 120, activeStreak: 15, accountStatus: 'Active', userType: 'Premium' },
-  { id: '2', name: 'Jane Smith', email: 'jane@example.com', avatar: null, registrationDate: '2023-02-20', lastActive: '2024-03-09', subscriptionStatus: 'Inactive', workoutCount: 85, activeStreak: 0, accountStatus: 'Suspended', userType: 'Free' },
-  { id: '3', name: 'Alice Johnson', email: 'alice@example.com', avatar: '/placeholder-avatar.jpg', registrationDate: '2023-03-05', lastActive: '2024-03-10', subscriptionStatus: 'Active', workoutCount: 200, activeStreak: 30, accountStatus: 'Active', userType: 'Premium' },
+  {
+    id: '1',
+    name: 'John Doe',
+    email: 'john@example.com',
+    avatar: '/placeholder-avatar.jpg',
+    registrationDate: '2023-01-15',
+    lastActive: '2024-03-10',
+    subscriptionStatus: 'Active',
+    workoutCount: 120,
+    activeStreak: 15,
+    accountStatus: 'Active',
+    userType: 'Premium'
+  },
+  {
+    id: '2',
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    avatar: null,
+    registrationDate: '2023-02-20',
+    lastActive: '2024-03-09',
+    subscriptionStatus: 'Inactive',
+    workoutCount: 85,
+    activeStreak: 0,
+    accountStatus: 'Suspended',
+    userType: 'Free'
+  },
+  {
+    id: '3',
+    name: 'Alice Johnson',
+    email: 'alice@example.com',
+    avatar: '/placeholder-avatar.jpg',
+    registrationDate: '2023-03-05',
+    lastActive: '2024-03-10',
+    subscriptionStatus: 'Active',
+    workoutCount: 200,
+    activeStreak: 30,
+    accountStatus: 'Active',
+    userType: 'Premium'
+  }
   // Add more mock users as needed
-]
+];
 
 type User = {
-  id: string
-  name: string
-  email: string
-  avatar: string | null
-  registrationDate: string
-  lastActive: string
-  subscriptionStatus: 'Active' | 'Inactive'
-  workoutCount: number
-  activeStreak: number
-  accountStatus: 'Active' | 'Suspended'
-  userType: 'Free' | 'Premium'
-}
+  id: string;
+  name: string;
+  email: string;
+  avatar: string | null;
+  registrationDate: string;
+  lastActive: string;
+  subscriptionStatus: 'Active' | 'Inactive';
+  workoutCount: number;
+  activeStreak: number;
+  accountStatus: 'Active' | 'Suspended';
+  userType: 'Free' | 'Premium';
+};
 
 export default function UserManagement() {
-  const [users, setUsers] = useState<User[]>(mockUsers)
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string | null>(null)
-  const [subscriptionFilter, setSubscriptionFilter] = useState<string | null>(null)
-  const [userTypeFilter, setUserTypeFilter] = useState<string | null>(null)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const { toast } = useToast()
+  const [users, setUsers] = useState<User[]>(mockUsers);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [subscriptionFilter, setSubscriptionFilter] = useState<string | null>(null);
+  const [userTypeFilter, setUserTypeFilter] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { toast } = useToast();
 
-  const filteredUsers = users.filter(user =>
-    (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (!statusFilter || user.accountStatus === statusFilter) &&
-    (!subscriptionFilter || user.subscriptionStatus === subscriptionFilter) &&
-    (!userTypeFilter || user.userType === userTypeFilter)
-  )
+  const filteredUsers = users.filter(
+    (user) =>
+      (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (!statusFilter || user.accountStatus === statusFilter) &&
+      (!subscriptionFilter || user.subscriptionStatus === subscriptionFilter) &&
+      (!userTypeFilter || user.userType === userTypeFilter)
+  );
 
   const handleSelectUser = (userId: string) => {
-    setSelectedUsers(prevSelected =>
-      prevSelected.includes(userId)
-        ? prevSelected.filter(id => id !== userId)
-        : [...prevSelected, userId]
-    )
-  }
+    setSelectedUsers((prevSelected) =>
+      prevSelected.includes(userId) ? prevSelected.filter((id) => id !== userId) : [...prevSelected, userId]
+    );
+  };
 
   const handleSelectAllUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedUsers(event.target.checked ? filteredUsers.map(user => user.id) : [])
-  }
+    setSelectedUsers(event.target.checked ? filteredUsers.map((user) => user.id) : []);
+  };
 
   const handleUserAction = (action: string, userId: string) => {
     // Implement user actions here
     toast({
-      title: "User Action",
-      description: `${action} action performed on user ${userId}`,
-    })
-  }
+      title: 'User Action',
+      description: `${action} action performed on user ${userId}`
+    });
+  };
 
   const handleBulkAction = (action: string) => {
     // Implement bulk actions here
     toast({
-      title: "Bulk Action",
-      description: `${action} action performed on ${selectedUsers.length} users`,
-    })
-    setSelectedUsers([])
-  }
+      title: 'Bulk Action',
+      description: `${action} action performed on ${selectedUsers.length} users`
+    });
+    setSelectedUsers([]);
+  };
 
   const openUserDetails = (user: User) => {
-    setSelectedUser(user)
-  }
+    setSelectedUser(user);
+  };
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
+    <div className="container mx-auto space-y-4 p-4">
       <h1 className="text-3xl font-bold">User Management</h1>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -134,20 +197,20 @@ export default function UserManagement() {
         </Card>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0">
-        <div className="flex-1 w-full md:w-auto">
+      <div className="mb-4 flex flex-col items-center justify-between space-y-2 md:flex-row md:space-y-0">
+        <div className="w-full flex-1 md:w-auto">
           <div className="relative">
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 transform text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8 w-full"
+              className="w-full pl-8"
             />
           </div>
         </div>
-        <div className="flex space-x-2 w-full md:w-auto">
+        <div className="flex w-full space-x-2 md:w-auto">
           <Select value={statusFilter || ''} onValueChange={(value) => setStatusFilter(value || null)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Account Status" />
@@ -265,11 +328,21 @@ export default function UserManagement() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => openUserDetails(user)}>View Details</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleUserAction('resetPassword', user.id)}>Reset Password</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleUserAction('changePlan', user.id)}>Change Plan</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleUserAction('suspend', user.id)}>Suspend Account</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleUserAction('notify', user.id)}>Send Notification</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleUserAction('export', user.id)}>Export Data</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUserAction('resetPassword', user.id)}>
+                          Reset Password
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUserAction('changePlan', user.id)}>
+                          Change Plan
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUserAction('suspend', user.id)}>
+                          Suspend Account
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUserAction('notify', user.id)}>
+                          Send Notification
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUserAction('export', user.id)}>
+                          Export Data
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -284,9 +357,7 @@ export default function UserManagement() {
         <DialogContent className="sm:max-w-[800px]">
           <DialogHeader>
             <DialogTitle>User Details</DialogTitle>
-            <DialogDescription>
-              Detailed information and actions for {selectedUser?.name}
-            </DialogDescription>
+            <DialogDescription>Detailed information and actions for {selectedUser?.name}</DialogDescription>
           </DialogHeader>
           {selectedUser && (
             <Tabs defaultValue="profile" className="w-full">
@@ -315,7 +386,12 @@ export default function UserManagement() {
                     <Label htmlFor="registrationDate" className="text-right">
                       Registration Date
                     </Label>
-                    <Input id="registrationDate" value={selectedUser.registrationDate} className="col-span-3" readOnly />
+                    <Input
+                      id="registrationDate"
+                      value={selectedUser.registrationDate}
+                      className="col-span-3"
+                      readOnly
+                    />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="lastActive" className="text-right">
@@ -394,5 +470,5 @@ export default function UserManagement() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

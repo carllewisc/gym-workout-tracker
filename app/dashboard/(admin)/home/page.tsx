@@ -24,14 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import {
-  Search,
-  Plus,
-  Edit,
-  Trash2,
-  MoreVertical,
-  LogOut,
-} from 'lucide-react';
+import { Search, Plus, Edit, Trash2, MoreVertical, LogOut } from 'lucide-react';
 import UserManagement from './_components/user-management';
 import AdminSettings from './_components/admin-settings';
 import ReportingDashboard from './_components/reporting-dashboard';

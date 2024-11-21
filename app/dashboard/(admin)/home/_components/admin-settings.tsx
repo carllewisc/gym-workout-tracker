@@ -1,44 +1,44 @@
-"use client"
+'use client';
 
-import React, { useState } from 'react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { useToast } from "@/hooks/use-toast"
-import { Loader2, RotateCcw, Download, Upload, Clock } from 'lucide-react'
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, RotateCcw, Download, Upload, Clock } from 'lucide-react';
 
 export default function AdminSettings() {
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = (section: string) => {
-    setIsLoading(true)
+    setIsLoading(true);
     // Simulating an API call
     setTimeout(() => {
-      setIsLoading(false)
+      setIsLoading(false);
       toast({
-        title: "Settings Saved",
-        description: `${section} settings have been updated successfully.`,
-      })
-    }, 1000)
-  }
+        title: 'Settings Saved',
+        description: `${section} settings have been updated successfully.`
+      });
+    }, 1000);
+  };
 
   const handleReset = (section: string) => {
     // Reset logic would go here
     toast({
-      title: "Settings Reset",
-      description: `${section} settings have been reset to default values.`,
-    })
-  }
+      title: 'Settings Reset',
+      description: `${section} settings have been reset to default values.`
+    });
+  };
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
+    <div className="container mx-auto space-y-4 p-4">
       <h1 className="text-3xl font-bold">Admin Settings</h1>
 
       <Tabs defaultValue="general" className="w-full">
@@ -128,7 +128,9 @@ export default function AdminSettings() {
               </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => handleReset('General')}>Reset to Defaults</Button>
+              <Button variant="outline" onClick={() => handleReset('General')}>
+                Reset to Defaults
+              </Button>
               <Button onClick={() => handleSave('General')} disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Saving...' : 'Save Changes'}
@@ -180,7 +182,9 @@ export default function AdminSettings() {
               </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => handleReset('Exercise')}>Reset to Defaults</Button>
+              <Button variant="outline" onClick={() => handleReset('Exercise')}>
+                Reset to Defaults
+              </Button>
               <Button onClick={() => handleSave('Exercise')} disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Saving...' : 'Save Changes'}
@@ -282,7 +286,9 @@ export default function AdminSettings() {
               </Accordion>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => handleReset('User')}>Reset to Defaults</Button>
+              <Button variant="outline" onClick={() => handleReset('User')}>
+                Reset to Defaults
+              </Button>
               <Button onClick={() => handleSave('User')} disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Saving...' : 'Save Changes'}
@@ -344,7 +350,9 @@ export default function AdminSettings() {
               </Accordion>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => handleReset('Notification')}>Reset to Defaults</Button>
+              <Button variant="outline" onClick={() => handleReset('Notification')}>
+                Reset to Defaults
+              </Button>
               <Button onClick={() => handleSave('Notification')} disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Saving...' : 'Save Changes'}
@@ -447,7 +455,9 @@ export default function AdminSettings() {
               </Accordion>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => handleReset('Backup & Maintenance')}>Reset to Defaults</Button>
+              <Button variant="outline" onClick={() => handleReset('Backup & Maintenance')}>
+                Reset to Defaults
+              </Button>
               <Button onClick={() => handleSave('Backup & Maintenance')} disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading ? 'Saving...' : 'Save Changes'}
@@ -480,5 +490,5 @@ export default function AdminSettings() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
