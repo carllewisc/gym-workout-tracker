@@ -29,7 +29,7 @@ type WorkoutDay = {
   exercises: Exercise[];
 };
 
-export default function Page() {
+export default function BasicTrainingPlanCreator() {
   const { toast } = useToast();
   const [planName, setPlanName] = useState('');
   const [description, setDescription] = useState('');

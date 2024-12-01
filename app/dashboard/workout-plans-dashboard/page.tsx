@@ -13,15 +13,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {
-  MoreVertical,
-  LogOut,
-} from 'lucide-react';
+import { MoreVertical, LogOut } from 'lucide-react';
 import PageContainer from '@/components/layout/page-container';
 import TrainingPlans from './_components/training-plans';
 import CreateTrainingPlan from './_components/create-training-plan';
 import TrainingDayConfig from './_components/training-day-config';
 import SupersetConfigModal from './_components/superset-config-modal';
+import TrainingPlansList from './_components/training-plans-list';
+import BasicTrainingPlanCreator from './_components/basic-training-plan-creator';
 
 const WorkoutPlansDashboard = () => {
   return (
@@ -64,6 +63,8 @@ const WorkoutPlansDashboard = () => {
             <TabsTrigger value="create-training-plan">Create Training Plan</TabsTrigger>
             <TabsTrigger value="training-day-config">Training Day Config</TabsTrigger>
             <TabsTrigger value="superset-config-modal">Superset Config Modal</TabsTrigger>
+            <TabsTrigger value="training-plans-list">Training Plans List</TabsTrigger>
+            <TabsTrigger value="basic-training-plan-creator">Basic Training Plan Creator</TabsTrigger>
           </TabsList>
           <TabsContent value="training-plans">
             <Card>
@@ -83,6 +84,16 @@ const WorkoutPlansDashboard = () => {
           <TabsContent value="superset-config-modal">
             <Card>
               <SupersetConfigModal />
+            </Card>
+          </TabsContent>
+          <TabsContent value="training-plans-list">
+            <Card>
+              <TrainingPlansList />
+            </Card>
+          </TabsContent>
+          <TabsContent value="basic-training-plan-creator">
+            <Card>
+              <BasicTrainingPlanCreator />
             </Card>
           </TabsContent>
         </Tabs>

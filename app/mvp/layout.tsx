@@ -71,12 +71,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           shortcut: ['m', 'm']
         },
         {
-          title: 'Gym 3',
-          url: '/dashboard/gym-3',
-          icon: 'userPen',
-          shortcut: ['m', 'm']
-        },
-        {
           title: 'Kanban',
           url: '/dashboard/kanban',
           icon: 'userPen',

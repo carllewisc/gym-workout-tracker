@@ -131,27 +131,6 @@ export const navItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: 'Gym',
-    url: '#',
-    icon: 'gym',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [
-      {
-        title: 'Workouts',
-        url: '/dashboard/workout',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
-      },
-      {
-        title: 'Gym 3',
-        url: '/dashboard/gym-3',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
-      }
-    ]
-  },
-  {
     title: 'Modulo workout exercise',
     url: '#',
     icon: 'dashboard',
@@ -161,21 +140,6 @@ export const navItems: NavItem[] = [
       {
         title: 'Exercise 1',
         url: '/dashboard/workout-tracker',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
-      }
-    ]
-  },
-  {
-    title: 'Modulo Exercise Management',
-    url: '#',
-    icon: 'dashboard',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [
-      {
-        title: 'Exercise management',
-        url: '/dashboard/exercise-management',
         icon: 'userPen',
         shortcut: ['m', 'm']
       }
@@ -204,12 +168,6 @@ export const navItems: NavItem[] = [
     shortcut: ['d', 'd'],
     items: [
       {
-        title: 'Exercise',
-        url: '/dashboard/exercise',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
-      },
-      {
         title: 'Exercise List',
         url: '/dashboard/list',
         icon: 'userPen',
@@ -220,12 +178,6 @@ export const navItems: NavItem[] = [
         url: '/dashboard/list-3',
         icon: 'add',
         shortcut: ['c', 'c']
-      },
-      {
-        title: 'List',
-        url: '/dashboard/list',
-        icon: 'userPen',
-        shortcut: ['m', 'm']
       }
     ]
   },

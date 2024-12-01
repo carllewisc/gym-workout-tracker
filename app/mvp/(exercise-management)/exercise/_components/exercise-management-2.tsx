@@ -93,7 +93,7 @@ type Exercise = {
   imageUrl?: string;
 };
 
-const ExerciseManagement: React.FC = () => {
+const ExerciseManagement = () => {
   const [exercises, setExercises] = useState<Exercise[]>(initialExercises);
   const [searchTerm, setSearchTerm] = useState('');
   const [muscleFilter, setMuscleFilter] = useState<string | null>(null);

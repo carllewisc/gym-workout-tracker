@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 import Image from 'next/image';
-import { fetchExercises, createExercise, updateExercise, deleteExercise } from './_api';
+import { fetchExercises, createExercise, updateExercise, deleteExercise } from '../_api';
 
 type MuscleGroup = 'Chest' | 'Back' | 'Legs' | 'Shoulders' | 'Biceps' | 'Triceps';
 

@@ -1,15 +1,15 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2, Share2, Trash2, Plus, X } from 'lucide-react'
-import { toast } from 'sonner'
-import { createWorkout, fetchAllExercises } from '../_api'
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Loader2, Share2, Trash2, Plus, X } from 'lucide-react';
+import { toast } from 'sonner';
+import { createWorkout, fetchAllExercises } from '../_api';
 
 interface Set {
   weight: string;
@@ -32,123 +32,126 @@ interface ApiExercise {
 }
 
 export default function WorkoutForm() {
-  const [exercises, setExercises] = useState<Exercise[]>([])
-  const [apiExercises, setApiExercises] = useState<ApiExercise[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [bodyweight, setBodyweight] = useState('')
-  const [notes, setNotes] = useState('')
-  const [isSaving, setIsSaving] = useState(false)
-  const [newExerciseName, setNewExerciseName] = useState('')
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [apiExercises, setApiExercises] = useState<ApiExercise[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [bodyweight, setBodyweight] = useState('');
+  const [notes, setNotes] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [newExerciseName, setNewExerciseName] = useState('');
 
   useEffect(() => {
     fetchAllExercises()
       .then((response) => {
-        setApiExercises(response.exercises)
-        setIsLoading(false)
+        setApiExercises(response.exercises);
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching exercises:', error)
-        toast.error('Failed to load exercises')
-        setIsLoading(false)
-      })
-  }, [])
+        console.error('Error fetching exercises:', error);
+        toast.error('Failed to load exercises');
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleSetChange = (exerciseId: number, setIndex: number, field: 'weight' | 'reps', value: string) => {
     setExercises((prevExercises) =>
       prevExercises.map((exercise) =>
         exercise.id === exerciseId
           ? {
-            ...exercise,
-            sets: exercise.sets.map((set, idx) => (idx === setIndex ? { ...set, [field]: value } : set))
-          }
+              ...exercise,
+              sets: exercise.sets.map((set, idx) => (idx === setIndex ? { ...set, [field]: value } : set))
+            }
           : exercise
       )
-    )
-  }
+    );
+  };
 
   const handleExerciseNameChange = (exerciseId: number, newName: string) => {
     setExercises((prevExercises) =>
       prevExercises.map((exercise) => (exercise.id === exerciseId ? { ...exercise, name: newName } : exercise))
-    )
-  }
+    );
+  };
 
   const addNewExercise = () => {
     if (!newExerciseName.trim()) {
-      toast.error('Please select an exercise')
-      return
+      toast.error('Please select an exercise');
+      return;
     }
 
-    const newId = Math.max(0, ...exercises.map((e) => e.id)) + 1
+    const newId = Math.max(0, ...exercises.map((e) => e.id)) + 1;
     const newExercise: Exercise = {
       id: newId,
       name: newExerciseName,
       sets: [
         { weight: '0', reps: '0' },
         { weight: '0', reps: '0' },
+        { weight: '0', reps: '0' },
         { weight: '0', reps: '0' }
       ]
-    }
+    };
 
-    setExercises([...exercises, newExercise])
-    setNewExerciseName('')
-    toast.success('Exercise added successfully')
-  }
+    setExercises([...exercises, newExercise]);
+    setNewExerciseName('');
+    toast.success('Exercise added successfully');
+  };
 
   const removeExercise = (exerciseId: number) => {
-    setExercises(exercises.filter((exercise) => exercise.id !== exerciseId))
-    toast.success('Exercise removed')
-  }
+    setExercises(exercises.filter((exercise) => exercise.id !== exerciseId));
+    toast.success('Exercise removed');
+  };
 
   const calculateTotal = () => {
-    let totalReps = 0
-    let totalWeight = 0
+    let totalReps = 0;
+    let totalWeight = 0;
 
     exercises.forEach((exercise) => {
       exercise.sets.forEach((set) => {
-        const reps = parseInt(set.reps) || 0
-        const weight = parseFloat(set.weight) || 0
-        totalReps += reps
-        totalWeight += weight * reps
-      })
-    })
+        const reps = parseInt(set.reps) || 0;
+        const weight = parseFloat(set.weight) || 0;
+        totalReps += reps;
+        totalWeight += weight * reps;
+      });
+    });
 
-    return { totalReps, totalWeight }
-  }
+    return { totalReps, totalWeight };
+  };
 
-  const { totalReps, totalWeight } = calculateTotal()
+  const { totalReps, totalWeight } = calculateTotal();
 
   const resetForm = () => {
-    setExercises([])
-    setBodyweight('')
-    setNotes('')
-    setNewExerciseName('')
-  }
+    setExercises([]);
+    setBodyweight('');
+    setNotes('');
+    setNewExerciseName('');
+  };
 
   const handleCreateWorkout = async () => {
-    setIsSaving(true)
+    setIsSaving(true);
 
     try {
       const workout = await createWorkout({
         exercises,
         bodyweight,
         notes
-      })
-      toast.success('Workout created successfully')
-      console.log('Created workout:', workout)
-      resetForm()
+      });
+      toast.success('Workout created successfully');
+      console.log('Created workout:', workout);
+      resetForm();
     } catch (error) {
-      console.error('Error creating workout:', error)
-      toast.error('Failed to create workout')
+      console.error('Error creating workout:', error);
+      toast.error('Failed to create workout');
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">
-      <Loader2 className="h-8 w-8 animate-spin" />
-      <span className="ml-2">Loading exercises...</span>
-    </div>
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+        <span className="ml-2">Loading exercises...</span>
+      </div>
+    );
   }
 
   return (
@@ -191,7 +194,7 @@ export default function WorkoutForm() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-12">#</TableHead>
-              <TableHead>Exercise</TableHead>
+              <TableHead className="w-[200px]">Exercise</TableHead>
               <TableHead>Sets</TableHead>
               <TableHead className="text-right">Reps</TableHead>
               <TableHead className="text-right">Weight</TableHead>
@@ -313,5 +316,5 @@ export default function WorkoutForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }
