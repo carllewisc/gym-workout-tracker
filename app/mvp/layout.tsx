@@ -177,7 +177,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   const menuItems = isProduction ? menuItems2 : generateMenuStructure();
-  console.log(JSON.stringify(menuItems, null, 2));
 
   return (
     <KBar>

@@ -101,6 +101,11 @@ const WorkoutSchema: Schema = new Schema(
         },
         message: 'Invalid image URL format'
       }
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     }
   },
   {
@@ -125,17 +130,13 @@ WorkoutSchema.pre<IWorkout>('save', function (next) {
   next();
 });
 
-WorkoutSchema.methods.getExerciseVolume = function (
-  this: IWorkout,
-  exerciseName: string
-): number {
+WorkoutSchema.methods.getExerciseVolume = function (this: IWorkout, exerciseName: string): number {
   const exercise = this.exercises.find((e) => e.name === exerciseName);
   if (!exercise) return 0;
 
   return exercise.sets.reduce((total, set) => total + set.weight * set.reps, 0);
 };
 
-const Workout =
-  mongoose.models.Workout || mongoose.model<IWorkout>('Workout', WorkoutSchema);
+const Workout = mongoose.models.Workout || mongoose.model<IWorkout>('Workout', WorkoutSchema);
 
 export { Workout };

@@ -18,7 +18,6 @@ export class WorkoutService {
     try {
       const skip = (page - 1) * limit;
       const workouts = await Workout.find().sort({ date: -1 }).skip(skip).limit(limit).exec();
-
       const total = await Workout.countDocuments();
 
       return {
@@ -43,6 +42,26 @@ export class WorkoutService {
         throw new Error(`Error fetching workout: ${error.message}`);
       }
       throw new Error('Unknown error occurred while fetching workout');
+    }
+  }
+
+  static async getWorkoutsByUserId(page = 1, limit = 10, userId: string) {
+    try {
+      const skip = (page - 1) * limit;
+      const workouts = await Workout.find({ userId }).sort({ createdAt: -1 }).skip(skip).limit(limit).exec();
+      const total = await Workout.countDocuments({ userId });
+
+      return {
+        workouts,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit)
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error fetching workouts: ${error.message}`);
+      }
+      throw new Error('Unknown error occurred while fetching workouts');
     }
   }
 

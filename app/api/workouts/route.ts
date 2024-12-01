@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { WorkoutService } from '@/services/workoutService';
+import { AuthUser, withAuth } from '@/lib/auth-utils';
 
-export async function GET(request: Request) {
+async function handleGet(request: Request, user: AuthUser) {
   await connectDB();
 
   try {
@@ -17,14 +18,21 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
-  await connectDB();
-
+async function handlePost(request: Request, user: AuthUser) {
   try {
+    await connectDB();
     const body = await request.json();
-    const workout = await WorkoutService.createWorkout(body);
+
+    const workout = await WorkoutService.createWorkout({
+      ...body,
+      userId: user.id
+    });
+
     return NextResponse.json(workout, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create gym' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create workout' }, { status: 500 });
   }
 }
+
+export const GET = withAuth(handleGet);
+export const POST = withAuth(handlePost);
