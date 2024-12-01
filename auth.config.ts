@@ -1,7 +1,7 @@
-import { NextAuthConfig } from 'next-auth';
+import { NextAuthConfig, User } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import CredentialProvider from 'next-auth/providers/credentials';
 import GithubProvider from 'next-auth/providers/github';
-import { AuthService } from '@/services/authService';
 
 const authConfig = {
   providers: [
@@ -25,8 +25,17 @@ const authConfig = {
         }
 
         try {
-          const user = await AuthService.validateUser(credentials.email, credentials.password);
+          const response = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: credentials.email, password: credentials.password })
+          });
 
+          if (!response.ok) {
+            return null;
+          }
+
+          const user = await response.json();
           return user;
         } catch (error) {
           return null;
@@ -38,15 +47,15 @@ const authConfig = {
     signIn: '/'
   },
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user }: { token: JWT; user: User | undefined }) {
       if (user) {
         token.id = user.id;
       }
       return token;
     },
-    session({ session, token }) {
+    session({ session, token }: { session: any; token: JWT }) {
       if (session.user) {
-        session.user.id = token.id;
+        session.user.id = token.id as string;
       }
       return session;
     }

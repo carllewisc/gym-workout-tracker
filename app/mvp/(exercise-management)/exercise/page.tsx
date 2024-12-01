@@ -53,6 +53,7 @@ export default function WorkoutAnalytics() {
           <TabsContent value="overview">
             <Card>
               {/*<WorkoutAllStats workouts={workouts} />*/}
+              {/* @ts-ignore */}
               <ExerciseManagement workouts={workouts} />
             </Card>
           </TabsContent>
