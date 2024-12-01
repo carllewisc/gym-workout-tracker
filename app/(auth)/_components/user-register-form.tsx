@@ -5,25 +5,26 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 
 const formSchema = z.object({
+  name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
   email: z.string().email({ message: 'Enter a valid email address' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' })
 });
 
 type UserFormValue = z.infer<typeof formSchema>;
 
-export default function UserAuthForm() {
+export default function UserRegisterForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl');
   const [loading, startTransition] = useTransition();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const defaultValues = {
+    name: '',
     email: 'demo@gmail.com',
     password: ''
   };
@@ -32,23 +33,37 @@ export default function UserAuthForm() {
     defaultValues
   });
 
-  useEffect(() => {
-    const error = searchParams.get('error');
-    const code = searchParams.get('code');
-    if (error === 'CredentialsSignin' && code === 'credentials') {
-      setErrorMessage('Invalid email or password');
-    }
-  }, [searchParams]);
-
   const onSubmit = async (data: UserFormValue) => {
     startTransition(async () => {
-      const response = await signIn('credentials', {
-        email: data.email,
-        password: data.password,
-        callbackUrl: callbackUrl ?? '/dashboard'
-      });
-      if (response) {
-        toast.success('Signed In Successfully!');
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error);
+        }
+
+        const result = await signIn('credentials', {
+          email: data.email,
+          password: data.password,
+          redirect: false
+        });
+
+        if (result?.error) {
+          toast.error(result.error);
+          return;
+        }
+
+        toast.success('Signed up successfully!');
+        window.location.href = callbackUrl ?? '/dashboard';
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Something went wrong');
       }
     });
   };
@@ -57,6 +72,19 @@ export default function UserAuthForm() {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-2">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Enter your name..." disabled={loading} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="email"
@@ -84,9 +112,8 @@ export default function UserAuthForm() {
             )}
           />
 
-          {errorMessage && <div className="mb-2 text-sm text-red-500">{errorMessage}</div>}
           <Button disabled={loading} className="ml-auto w-full" type="submit">
-            Continue With Email
+            Continue
           </Button>
         </form>
       </Form>

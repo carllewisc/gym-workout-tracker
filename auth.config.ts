@@ -1,6 +1,7 @@
 import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
 import GithubProvider from 'next-auth/providers/github';
+import { AuthService } from '@/services/authService';
 
 const authConfig = {
   providers: [
@@ -9,6 +10,7 @@ const authConfig = {
       clientSecret: process.env.GITHUB_SECRET ?? ''
     }),
     CredentialProvider({
+      name: 'credentials',
       credentials: {
         email: {
           type: 'email'
@@ -17,26 +19,37 @@ const authConfig = {
           type: 'password'
         }
       },
-      async authorize(credentials, req) {
-        const user = {
-          id: '1',
-          name: 'John',
-          email: credentials?.email as string
-        };
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Invalid credentials');
+        }
 
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        try {
+          const user = await AuthService.validateUser(credentials.email, credentials.password);
+
+          return user;
+        } catch (error) {
+          return null;
         }
       }
     })
   ],
   pages: {
-    signIn: '/' //sigin page
+    signIn: '/'
+  },
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id;
+      }
+      return session;
+    }
   }
 } satisfies NextAuthConfig;
 
