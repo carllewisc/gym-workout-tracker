@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/sidebar';
 import { navItems } from '@/constants/data';
 import { BadgeCheck, Bell, ChevronRight, ChevronsUpDown, CreditCard, GalleryVerticalEnd, LogOut } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -168,7 +168,7 @@ export default function AppSidebar({ menuItems = [] }: { menuItems: any }) {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => signOut()}>
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

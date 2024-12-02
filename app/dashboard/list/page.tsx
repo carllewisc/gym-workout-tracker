@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { useState } from 'react';
 
 export default function Component() {
@@ -126,10 +126,6 @@ export default function Component() {
         <div className="border-b">
           <div className="container mx-auto px-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList>
-                <TabsTrigger value="exercise-list">Exercise List</TabsTrigger>
-                <TabsTrigger value="workout-plans">Workout Plans</TabsTrigger>
-              </TabsList>
               <TabsContent value="exercise-list" className="space-y-4">
                 <h2 className="mb-6 mt-6 text-3xl font-bold">Exercise List</h2>
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

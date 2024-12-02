@@ -6,25 +6,20 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn Dashboard Starter',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Dashboard',
+  description: 'Dashboard'
 };
 
 import { generateMenuStructure } from '@/utils/menu-generator';
 
-
-export default function DashboardLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   // Persisting the sidebar state in the cookie.
   const cookieStore = cookies();
   const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true';
 
   // In your layout or navigation component:
   const menuItems = generateMenuStructure();
-  
+
   return (
     <KBar>
       <SidebarProvider defaultOpen={defaultOpen}>
