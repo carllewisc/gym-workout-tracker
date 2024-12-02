@@ -4,13 +4,14 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Share2, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { ExerciseSheet } from './components/exercise-sheet';
 import { ExerciseCard } from './components/exercise-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 import { createWorkout, fetchAllExercises } from '../_api';
 
+// TODO: interface Exercise, Set, ApiExercise duplicated in api.d.ts
 interface Set {
   weight: string;
   reps: string;
@@ -151,9 +152,6 @@ export default function WorkoutFormMobile() {
         <div className="flex h-14 items-center justify-between px-4">
           <h1 className="text-lg font-semibold">Gym Workout</h1>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Share2 className="h-5 w-5" />
-            </Button>
             <time className="text-sm text-muted-foreground">{new Date().toLocaleDateString()}</time>
           </div>
         </div>

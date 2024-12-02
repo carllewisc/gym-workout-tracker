@@ -7,32 +7,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Share2, Trash2, Plus, X } from 'lucide-react';
+import { Loader2, Trash2, Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { createWorkout, fetchAllExercises } from '../_api';
 
-interface Set {
-  weight: string;
-  reps: string;
-}
-
-interface Exercise {
-  id: number;
-  name: string;
-  sets: Set[];
-}
-
-interface ApiExercise {
-  _id: string;
-  name: string;
-  muscle: string;
-  image: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export default function WorkoutForm() {
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [exercises, setExercises] = useState<Omit<Exercise, 'muscle'>[]>([]);
   const [apiExercises, setApiExercises] = useState<ApiExercise[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [bodyweight, setBodyweight] = useState('');
@@ -47,7 +27,6 @@ export default function WorkoutForm() {
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching exercises:', error);
         toast.error('Failed to load exercises');
         setIsLoading(false);
       });
@@ -79,7 +58,7 @@ export default function WorkoutForm() {
     }
 
     const newId = Math.max(0, ...exercises.map((e) => e.id)) + 1;
-    const newExercise: Exercise = {
+    const newExercise: Omit<Exercise, 'muscle'> = {
       id: newId,
       name: newExerciseName,
       sets: [
@@ -129,16 +108,14 @@ export default function WorkoutForm() {
     setIsSaving(true);
 
     try {
-      const workout = await createWorkout({
+      await createWorkout({
         exercises,
         bodyweight,
         notes
       });
       toast.success('Workout created successfully');
-      console.log('Created workout:', workout);
       resetForm();
     } catch (error) {
-      console.error('Error creating workout:', error);
       toast.error('Failed to create workout');
     } finally {
       setIsSaving(false);
@@ -159,10 +136,6 @@ export default function WorkoutForm() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Gym Workout</h1>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm">
-            <Share2 className="mr-2 h-4 w-4" />
-            Share
-          </Button>
           <time className="text-sm text-muted-foreground">{new Date().toLocaleDateString()}</time>
         </div>
       </div>
