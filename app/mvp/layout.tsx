@@ -6,8 +6,8 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn Dashboard Starter',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Dashboard',
+  description: 'Dashboard'
 };
 
 import { generateMenuStructure } from '@/utils/menu-generator';
@@ -67,12 +67,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {
           title: 'Exercise Management',
           url: '/dashboard/exercise-management',
-          icon: 'userPen',
-          shortcut: ['m', 'm']
-        },
-        {
-          title: 'Kanban',
-          url: '/dashboard/kanban',
           icon: 'userPen',
           shortcut: ['m', 'm']
         },
