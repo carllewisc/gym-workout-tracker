@@ -3,6 +3,24 @@ import { JWT } from 'next-auth/jwt';
 import CredentialProvider from 'next-auth/providers/credentials';
 import GithubProvider from 'next-auth/providers/github';
 
+declare module 'next-auth' {
+  interface User {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+    role: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  }
+}
+
 const authConfig = {
   providers: [
     GithubProvider({
@@ -49,13 +67,15 @@ const authConfig = {
   callbacks: {
     jwt({ token, user }: { token: JWT; user: User | undefined }) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id as string;
+        token.role = user.role as string;
       }
       return token;
     },
     session({ session, token }: { session: any; token: JWT }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
       return session;
     }

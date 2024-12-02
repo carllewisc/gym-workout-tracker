@@ -35,21 +35,27 @@ import * as React from 'react';
 import { Icons } from '../icons';
 
 export const company = {
-  name: 'Acme Inc',
+  name: 'Gym app',
   logo: GalleryVerticalEnd,
   plan: 'Enterprise'
 };
 
 export default function AppSidebar({ menuItems = [] }: { menuItems: any }) {
   const { data: session } = useSession();
+  const isUser = session?.user.role === 'user';
   const pathname = usePathname();
-  const newMenuItems = !Array.isArray(menuItems)
+  const isCustomDashboard = Array.isArray(menuItems);
+
+  let newMenuItems = !isCustomDashboard
     ? navItems
     : [
         menuItems?.find((item) => item.title === 'Module Mvp'),
         menuItems?.find((item) => item.title === 'Module Dashboard'),
         ...navItems
       ].filter(Boolean);
+  if (isUser && isCustomDashboard) {
+    newMenuItems = newMenuItems.filter((item) => item.title == 'Module Mvp');
+  }
 
   return (
     <Sidebar collapsible="icon">
