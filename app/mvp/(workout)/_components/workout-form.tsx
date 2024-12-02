@@ -155,7 +155,7 @@ export default function WorkoutForm() {
   }
 
   return (
-    <div className="container mx-auto max-w-5xl p-6">
+    <div className="container mx-auto hidden max-w-5xl p-6 md:block">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Gym Workout</h1>
         <div className="flex items-center gap-2">

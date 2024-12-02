@@ -6,6 +6,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   image?: string;
+  role: 'user' | 'admin';
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -29,6 +30,12 @@ const UserSchema = new Schema(
     },
     image: {
       type: String
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+      required: true
     }
   },
   {
