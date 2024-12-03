@@ -7,8 +7,8 @@ import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Gym Dashboard',
+  description: 'Gym Dashboard'
 };
 
 const lato = Lato({
@@ -17,18 +17,10 @@ const lato = Lato({
   display: 'swap'
 });
 
-export default async function RootLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   return (
-    <html
-      lang="en"
-      className={`${lato.className}`}
-      suppressHydrationWarning={true}
-    >
+    <html lang="en" className={`${lato.className}`} suppressHydrationWarning={true}>
       <body className={'overflow-hidden'}>
         <NextTopLoader showSpinner={false} />
         <Providers session={session}>

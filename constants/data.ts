@@ -123,12 +123,48 @@ export type Product = {
 
 export const navItems: NavItem[] = [
   {
+    title: 'App',
+    url: '#',
+    icon: 'gym',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [
+      {
+        title: 'Overview',
+        url: '/mvp',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Create workout',
+        url: '/mvp/create',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      }
+    ]
+  },
+  {
     title: 'Dashboard',
     url: '/dashboard/overview',
     icon: 'dashboard',
     isActive: false,
     shortcut: ['d', 'd'],
     items: [] // Empty array as there are no child items for Dashboard
+  },
+  {
+    title: 'Admin',
+    url: '#',
+    icon: 'dashboard',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: [
+      {
+        title: 'Exercise',
+        url: '/mvp/admin/exercise',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
+      }
+    ]
   },
   {
     title: 'Modulo workout exercise',

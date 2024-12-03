@@ -54,7 +54,7 @@ export default function AppSidebar({ menuItems = [] }: { menuItems: any }) {
         ...navItems
       ].filter(Boolean);
   if (isUser && isCustomDashboard) {
-    newMenuItems = newMenuItems.filter((item) => item.title == 'Module Mvp');
+    newMenuItems = navItems.filter((item) => item.title == 'App');
   }
 
   return (
