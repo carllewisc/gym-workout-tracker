@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import ProgressOverviewByExercise from './_components/progress-overview-by-exercise';
-import WorkoutStats from './_components/workout-stats';
 import WorkoutList from './_components/workout-list';
 import TrainingInsights from './_components/training-insights';
 import TrainingCalendar from './_components/training-calendar';
@@ -22,25 +21,8 @@ import PageContainer from '@/components/layout/page-container';
 import { generateTrainingInsights } from '@/app/mvp/(workout)/_utils/generateTrainingInsights';
 import { generatePersonalRecords } from '@/app/mvp/(workout)/_utils/generatePersonalRecords';
 
-const progressData = [
-  { date: '2023-04-30', weight: 95, reps: 5, notes: 'First session' },
-  { date: '2023-05-07', weight: 103, reps: 5 },
-  { date: '2023-05-14', weight: 110, reps: 5, notes: 'PR attempt' },
-  { date: '2023-05-21', weight: 110, reps: 6 },
-  { date: '2023-05-28', weight: 115, reps: 5 },
-  { date: '2023-06-04', weight: 115, reps: 5 },
-  { date: '2023-06-11', weight: 125, reps: 4, notes: 'New PR!' }
-];
-
 export default function WorkoutAnalytics() {
   const [dateRange, setDateRange] = React.useState('6m');
-
-  const stats = {
-    startingWeight: progressData[0].weight,
-    currentWeight: progressData[progressData.length - 1].weight,
-    improvement: progressData[progressData.length - 1].weight - progressData[0].weight,
-    bestSession: Math.max(...progressData.map((d) => d.weight))
-  };
   const [workouts, setWorkouts] = React.useState([]);
 
   useEffect(() => {
@@ -58,7 +40,7 @@ export default function WorkoutAnalytics() {
 
   return (
     <PageContainer scrollable>
-      <div className="container mx-auto space-y-6 py-6">
+      <div className="mx-auto space-y-6 py-6 md:container">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Workout Analytics</h1>
           <Select defaultValue={dateRange} onValueChange={setDateRange}>
@@ -94,13 +76,14 @@ export default function WorkoutAnalytics() {
           <TabsContent value="overview">
             <Card>
               <WorkoutAllStats workouts={workouts} />
-              <WorkoutList workouts={workouts} />
+              <div className="md:container">
+                <WorkoutList workouts={workouts} />
+              </div>
             </Card>
           </TabsContent>
 
           <TabsContent value="progress" className="space-y-4">
             <ProgressOverviewByExercise workouts={workouts} />
-            <WorkoutStats stats={stats} />
           </TabsContent>
 
           <TabsContent value="training-insights">

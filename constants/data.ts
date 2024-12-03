@@ -163,6 +163,12 @@ export const navItems: NavItem[] = [
         url: '/mvp/admin/exercise',
         icon: 'userPen',
         shortcut: ['m', 'm']
+      },
+      {
+        title: 'Admin settings',
+        url: '/dashboard/home',
+        icon: 'userPen',
+        shortcut: ['m', 'm']
       }
     ]
   },

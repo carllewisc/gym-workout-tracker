@@ -34,7 +34,7 @@ export default function WorkoutList({ workouts: initialWorkouts }: { workouts: W
   useEffect(() => {
     setWorkouts(initialWorkouts);
   }, [initialWorkouts]);
-  
+
   const toggleExpand = (workoutId: string) => {
     setExpandedWorkout(expandedWorkout === workoutId ? null : workoutId);
   };
@@ -60,7 +60,7 @@ export default function WorkoutList({ workouts: initialWorkouts }: { workouts: W
   };
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="mx-auto py-10">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Workout List</h1>
         <Link href="/mvp/create">
@@ -175,7 +175,7 @@ export default function WorkoutList({ workouts: initialWorkouts }: { workouts: W
               Are you sure you want to delete this workout? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="gap-y-4">
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
               Cancel
             </Button>
