@@ -16,6 +16,7 @@ import {
   subMonths,
   getDay
 } from 'date-fns';
+import { mapWorkoutsToHeatmapData } from '@/app/mvp/(workout)/_utils/mapWorkoutsToHeatmapData';
 
 type WorkoutData = {
   exercises: number;
@@ -101,7 +102,7 @@ const DayCell = React.memo(
 
 DayCell.displayName = 'DayCell';
 
-export default function TrainingCalendar() {
+export default function TrainingCalendar({ workouts }: { workouts: any[] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [heatmapData, setHeatmapData] = useState<HeatmapData>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -109,11 +110,13 @@ export default function TrainingCalendar() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
       const monthStart = startOfMonth(currentDate);
       const monthEnd = endOfMonth(currentDate);
-      const data = generateMockData(monthStart, monthEnd);
-      setHeatmapData(data);
+      // TODO: Replace mock data with actual data and remove the mock data generator
+      // const data = generateMockData(monthStart, monthEnd);
+      const data2 = mapWorkoutsToHeatmapData(workouts);
+      setHeatmapData(data2);
       setIsLoading(false);
     };
     fetchData();

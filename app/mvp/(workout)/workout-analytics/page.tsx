@@ -91,7 +91,7 @@ export default function WorkoutAnalytics() {
           </TabsContent>
 
           <TabsContent value="training-calendar">
-            <TrainingCalendar />
+            <TrainingCalendar workouts={workouts} />
           </TabsContent>
 
           <TabsContent value="personal-records">
